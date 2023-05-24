@@ -28,4 +28,6 @@ class Ghost {
             this.changeRandomDirection();
         }, 10000);
     }
+
     
+}

@@ -23,7 +23,7 @@ moveProcess() {
         return;
     }
 }
-
+// ma favorite function lol xD its a nested loop though. Im gonna need to fix this later on. dont like that 0^2 time complexity..
 eat() {
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[0].length; j++) {
@@ -94,7 +94,73 @@ checkCollisions() {
 }
 
 checkGhostCollison(ghosts) {
-
+    for (let i = 0; i < ghosts.length; i++) {
+        let ghost = ghosts[i];
+        if (
+            ghost.getMapX() == this.getMapX() &&
+            ghost.getMapY() == this.getMapY()
+        ) {
+            return true;
+        }
+    }
+    return false;
+}
+changeDirectionIfPossible() {
+    if(this.direction == this.nextDirection) return;
+    let tempDirection = this.direction;
+    this.direction = this.nextDirection;
+    this.moveForwards();
+    if (this.checkCollisions()) {
+        this.moveBackwards();
+        this.direction = tempDirection;
+    } else {
+        this.moveBackwards();
+    }
+}
+getMapX() {
+    let mapX = parseInt(this.x / oneBlockSize);
+    return mapX;
+}
+getMapY() {
+    let mapY = parseInt(this.y / oneBlockSize);
+    return mapY;
 }
 
+getMapXRightSide() {
+    let mapX = parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
+    return mapX;
+}
+getMapYRightSide() {
+    let mapY = parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
+    return mapY;
+}
+
+changeAnimation() {
+    this.currentFrame = 
+        this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
+}
+draw() {
+    canvasContext.save();
+    canvasContext.translate(
+        this.x + oneBlockSize / 2,
+        this.y + oneBlockSize / 2
+    );
+    canvasContext.rotate((this.direction * 90 * MATH.PI) / 180);
+    canvasContext.translate(
+        -this.x - oneBlockSize / 2, 
+        -this.y - oneBlockSize / 2
+    );
+    canvasContext.drawImage(
+        pacmanFrames, 
+        (this.currentFrame - 1) * oneBlockSize,
+        0,
+        oneBlockSize,
+        oneBlockSize,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+    );
+    canvasContext.restore();
+  }
 }
