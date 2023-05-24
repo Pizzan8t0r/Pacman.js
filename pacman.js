@@ -93,4 +93,8 @@ checkCollisions() {
     return isCollided;
 }
 
+checkGhostCollison(ghosts) {
+
+}
+
 }
