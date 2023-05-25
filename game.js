@@ -57,3 +57,51 @@ let map = [
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
+
+let randomTargetForGhosts = [
+    { x: 1 * oneBlockSize, y: 1 * oneBlockSize},
+    { x: 1 * oneBlockSize, y: (map.length -2) * oneBlockSize},
+    { x: (map[0].length - 2) * oneBlockSize, y: oneBlockSize},
+    { 
+        x: (map[0].length - 2) * oneBlockSize,
+        y: (map.length - 2) * oneBlockSize,
+    },
+];
+
+let createNewPacman = () => {
+    pacman = new Pacman (
+        oneBlockSize,
+        oneBlockSize, 
+        oneBlockSize,
+        oneBlockSize,
+        oneBlockSize / 5
+    );
+};
+
+let gameLoop = () => {
+    update();
+    draw();
+};
+
+let gameInterval = setInterval(gameLoop, 1000 / fps);
+
+let restartPacmanAndGhosts = () => {
+    createNewPacman();
+    createGhosts();
+};
+
+let onGhostCollision = () => {
+    lives--;
+    restartPacmanAndGhosts();
+    if (lives == 0) {
+    }
+};
+
+let update = () => {
+    pacman.moveProcess();
+    pacman.eat();
+    updateGhosts();
+    if (pacman.checkGhostCollision(ghosts)) {
+        onGhostCollision();
+    }
+};
