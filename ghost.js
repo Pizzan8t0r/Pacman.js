@@ -28,6 +28,54 @@ class Ghost {
             this.changeRandomDirection();
         }, 10000);
     }
+    isInRange() {
+        let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
+        let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
+        if (
+            Math.sqrt(xDistance * xDistance + yDistance * yDistance) <=
+            this.range
+        ) {
+            return true;
+        }
+        return false;
+    }
 
+    changeRandomDirection() {
+        let addition = 1;
+        this.randomTargetIndex += addition;
+        this.randomTargetIndex = this.randomTargetIndex % 4;
+    }
+    
+    moveProcess() {
+        if (this.isInRange()) {
+            this.target = pacman;
+        } else {
+            this.target = this.randomTargetsForGhosts[this.randomTargetIndex];
+        }
+        this.changeDirectionIfPossible();
+        this.moveForwards();
+        if (this.checkCollisions()) {
+            this.moveBackwards();
+            return;
+        }
+    }
+
+    moveForwards() {
+        switch (this.direction) {
+            case 4: // Right
+                this.x += this.speed;
+            case 3: // Up
+                this.x -= this.speed;
+                break;
+            case 2: // Left
+                this.y += this.speed;
+                break;
+            case 1: // Bottom
+                this.y -= this.speed;
+                break;
+        }
+    }
+
+    
     
 }
