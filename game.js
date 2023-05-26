@@ -174,8 +174,88 @@ let drawWalls = () => {
                 oneBlockSize, 
                 "#342DCA"
             );
-            if (j > 0 && map[])
+            if (j > 0 && map[i][j - 1] == 1) {
+                createRect(
+                    j * oneBlockSize,
+                    i * oneBlockSize + wallOffset,
+                    wallSpaceWidth + wallOffset,
+                    wallSpaceWidth, 
+                    wallInnerColor
+                );
+            }
+            
+            if (j < map[0].length - 1 && map[i][j + 1] ==1) {
+                createRect(
+                    j * oneBlockSize + wallOffset,
+                    i * oneBlockSize + wallOffset,
+                    wallSpaceWidth + wallOffset,
+                    wallSpaceWidth,
+                    wallInnerColor
+
+                );
+            }
+            if (i < map.length - 1 && map[i + 1][j] == 1) {
+                createRect(
+                    j * oneBlockSize + wallOffset,
+                    i * oneBlockSize + wallOffset,
+                    wallSpaceWidth,
+                    wallSpaceWidth + wallOffset,
+                    wallInnerColor
+                );
+            }
+
+            if (i > 0 && map[i - 1][j] == 1) {
+                createRect(
+                    j * oneBlockSize + wallOffset,
+                    i * oneBlockSize,
+                    wallSpaceWidth,
+                    wallSpaceWidth + wallOffset,
+                    wallInnerColor
+                );
+            }
         }
+     }
+  }
+};
+
+let createGhosts = () => {
+    ghosts = [];
+    for (let i = 0; i < ghostCount * 2; i++) {
+        let newGhost = new Ghost(
+            9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
+            10 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+            pacman.speed / 2,
+            ghostImageLocations[i % 4].x,
+            ghostImageLocations[i % 4].y,
+            124,
+            116,
+            6 + i
+        );
+        ghosts.push(newGhost);
     }
- }
-}
+};
+
+createNewPacman();
+createGhosts();
+gameLoop();
+
+window.addEventListener("keydown", (event) => {
+    let k = event.keyCode;
+    setTimeout(() => {
+        if (k == 37 || k == 65) {
+            // left arrow or a
+            pacman.nextDirection = DIRECTION_LEFT;
+        } else if (k == 38 || k == 87) {
+            // up arrow or w
+            pacman.nextDirection = DIRECTION_UP;
+        } else if (k == 39 || k == 68) {
+            // right arrow or d
+            pacman.nextDirection = DIRECTION_RIGHT;
+        } else if (k == 40 || k == 83) {
+            // bottom arrow or s
+            pacman.nextDirection = DIRECTION_BOTTOM;
+        }
+    }, 1);
+});
