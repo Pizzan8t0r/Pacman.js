@@ -28,6 +28,7 @@ class Ghost {
             this.changeRandomDirection();
         }, 10000);
     }
+
     isInRange() {
         let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
         let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
@@ -45,12 +46,12 @@ class Ghost {
         this.randomTargetIndex += addition;
         this.randomTargetIndex = this.randomTargetIndex % 4;
     }
-    
+
     moveProcess() {
         if (this.isInRange()) {
             this.target = pacman;
         } else {
-            this.target = this.randomTargetsForGhosts[this.randomTargetIndex];
+            this.target = randomTargetsForGhosts[this.randomTargetIndex];
         }
         this.changeDirectionIfPossible();
         this.moveForwards();
@@ -59,6 +60,7 @@ class Ghost {
             return;
         }
     }
+
     moveBackwards() {
         switch (this.direction) {
             case 4: // Right
@@ -75,15 +77,17 @@ class Ghost {
                 break;
         }
     }
+
     moveForwards() {
         switch (this.direction) {
             case 4: // Right
                 this.x += this.speed;
+                break;
             case 3: // Up
-                this.x -= this.speed;
+                this.y -= this.speed;
                 break;
             case 2: // Left
-                this.y -= this.speed;
+                this.x -= this.speed;
                 break;
             case 1: // Bottom
                 this.y += this.speed;
@@ -161,7 +165,7 @@ class Ghost {
                 moves: [],
             },
         ];
-        while (queue. length > 0) {
+        while (queue.length > 0) {
             let poped = queue.shift();
             if (poped.x == destX && poped.y == destY) {
                 return poped.moves[0];
@@ -173,7 +177,8 @@ class Ghost {
                 }
             }
         }
-        return 1;
+
+        return 1; // direction
     }
 
     addNeighbors(poped, mp) {
@@ -182,7 +187,7 @@ class Ghost {
         let numOfColumns = mp[0].length;
 
         if (
-            poped.x - 1 >= 0 && 
+            poped.x - 1 >= 0 &&
             poped.x - 1 < numOfRows &&
             mp[poped.y][poped.x - 1] != 1
         ) {
@@ -193,7 +198,7 @@ class Ghost {
         if (
             poped.x + 1 >= 0 &&
             poped.x + 1 < numOfRows &&
-            mp[poped.y][poped.x +1] != 1
+            mp[poped.y][poped.x + 1] != 1
         ) {
             let tempMoves = poped.moves.slice();
             tempMoves.push(DIRECTION_RIGHT);
@@ -216,7 +221,6 @@ class Ghost {
             let tempMoves = poped.moves.slice();
             tempMoves.push(DIRECTION_BOTTOM);
             queue.push({ x: poped.x, y: poped.y + 1, moves: tempMoves });
-
         }
         return queue;
     }
@@ -225,6 +229,7 @@ class Ghost {
         let mapX = parseInt(this.x / oneBlockSize);
         return mapX;
     }
+
     getMapY() {
         let mapY = parseInt(this.y / oneBlockSize);
         return mapY;
@@ -241,7 +246,7 @@ class Ghost {
     }
 
     changeAnimation() {
-        this.currentFrame = 
+        this.currentFrame =
             this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
     }
 
@@ -265,11 +270,11 @@ class Ghost {
             this.x + oneBlockSize / 2,
             this.y + oneBlockSize / 2,
             this.range * oneBlockSize,
-            0, 
+            0,
             2 * Math.PI
         );
         canvasContext.stroke();
-    }   
+    }
 }
 
 let updateGhosts = () => {

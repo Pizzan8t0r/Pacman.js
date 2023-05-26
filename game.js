@@ -16,12 +16,12 @@ let lives = 3;
 let ghostCount = 4;
 let ghostImageLocations = [
     { x: 0, y: 0 },
-    { x: 176, y: 0},
-    { x: 0, y: 121},
-    { x: 176, y: 121},
+    { x: 176, y: 0 },
+    { x: 0, y: 121 },
+    { x: 176, y: 121 },
 ];
 
-// varibales for the game
+// Game variables
 let fps = 30;
 let pacman;
 let oneBlockSize = 20;
@@ -31,7 +31,9 @@ let wallSpaceWidth = oneBlockSize / 1.6;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
 
-// the map of the walls 
+// we now create the map of the walls,
+// if 1 wall, if 0 not wall
+// 21 columns // 23 rows
 let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -58,20 +60,26 @@ let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
-let randomTargetForGhosts = [
-    { x: 1 * oneBlockSize, y: 1 * oneBlockSize},
-    { x: 1 * oneBlockSize, y: (map.length -2) * oneBlockSize},
-    { x: (map[0].length - 2) * oneBlockSize, y: oneBlockSize},
-    { 
+let randomTargetsForGhosts = [
+    { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
+    { x: 1 * oneBlockSize, y: (map.length - 2) * oneBlockSize },
+    { x: (map[0].length - 2) * oneBlockSize, y: oneBlockSize },
+    {
         x: (map[0].length - 2) * oneBlockSize,
         y: (map.length - 2) * oneBlockSize,
     },
 ];
 
+// for (let i = 0; i < map.length; i++) {
+//     for (let j = 0; j < map[0].length; j++) {
+//         map[i][j] = 2;
+//     }
+// }
+
 let createNewPacman = () => {
-    pacman = new Pacman (
+    pacman = new Pacman(
         oneBlockSize,
-        oneBlockSize, 
+        oneBlockSize,
         oneBlockSize,
         oneBlockSize,
         oneBlockSize / 5
@@ -107,7 +115,7 @@ let update = () => {
 };
 
 let drawFoods = () => {
-    for(let i = 0; i < map.length; i++) {
+    for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[0].length; j++) {
             if (map[i][j] == 2) {
                 createRect(
@@ -132,7 +140,7 @@ let drawRemainingLives = () => {
             pacmanFrames,
             2 * oneBlockSize,
             0,
-            oneBlockSize, 
+            oneBlockSize,
             oneBlockSize,
             350 + i * oneBlockSize,
             oneBlockSize * map.length + 2,
@@ -147,14 +155,14 @@ let drawScore = () => {
     canvasContext.fillStyle = "white";
     canvasContext.fillText(
         "Score: " + score,
-        0, 
+        0,
         oneBlockSize * (map.length + 1)
     );
 };
 
 let draw = () => {
-    canvasContext.clearRect(0,0, canvas.width, canvas.height);
-    createRect(0,0, canvas.width, canvas.height, "black");
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    createRect(0, 0, canvas.width, canvas.height, "black");
     drawWalls();
     drawFoods();
     drawGhosts();
@@ -167,55 +175,55 @@ let drawWalls = () => {
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[0].length; j++) {
             if (map[i][j] == 1) {
-            createRect(
-                j * oneBlockSize,
-                i * oneBlockSize,
-                oneBlockSize,
-                oneBlockSize, 
-                "#342DCA"
-            );
-            if (j > 0 && map[i][j - 1] == 1) {
                 createRect(
                     j * oneBlockSize,
-                    i * oneBlockSize + wallOffset,
-                    wallSpaceWidth + wallOffset,
-                    wallSpaceWidth, 
-                    wallInnerColor
-                );
-            }
-            
-            if (j < map[0].length - 1 && map[i][j + 1] ==1) {
-                createRect(
-                    j * oneBlockSize + wallOffset,
-                    i * oneBlockSize + wallOffset,
-                    wallSpaceWidth + wallOffset,
-                    wallSpaceWidth,
-                    wallInnerColor
-
-                );
-            }
-            if (i < map.length - 1 && map[i + 1][j] == 1) {
-                createRect(
-                    j * oneBlockSize + wallOffset,
-                    i * oneBlockSize + wallOffset,
-                    wallSpaceWidth,
-                    wallSpaceWidth + wallOffset,
-                    wallInnerColor
-                );
-            }
-
-            if (i > 0 && map[i - 1][j] == 1) {
-                createRect(
-                    j * oneBlockSize + wallOffset,
                     i * oneBlockSize,
-                    wallSpaceWidth,
-                    wallSpaceWidth + wallOffset,
-                    wallInnerColor
+                    oneBlockSize,
+                    oneBlockSize,
+                    "#342DCA"
                 );
+                if (j > 0 && map[i][j - 1] == 1) {
+                    createRect(
+                        j * oneBlockSize,
+                        i * oneBlockSize + wallOffset,
+                        wallSpaceWidth + wallOffset,
+                        wallSpaceWidth,
+                        wallInnerColor
+                    );
+                }
+
+                if (j < map[0].length - 1 && map[i][j + 1] == 1) {
+                    createRect(
+                        j * oneBlockSize + wallOffset,
+                        i * oneBlockSize + wallOffset,
+                        wallSpaceWidth + wallOffset,
+                        wallSpaceWidth,
+                        wallInnerColor
+                    );
+                }
+
+                if (i < map.length - 1 && map[i + 1][j] == 1) {
+                    createRect(
+                        j * oneBlockSize + wallOffset,
+                        i * oneBlockSize + wallOffset,
+                        wallSpaceWidth,
+                        wallSpaceWidth + wallOffset,
+                        wallInnerColor
+                    );
+                }
+
+                if (i > 0 && map[i - 1][j] == 1) {
+                    createRect(
+                        j * oneBlockSize + wallOffset,
+                        i * oneBlockSize,
+                        wallSpaceWidth,
+                        wallSpaceWidth + wallOffset,
+                        wallInnerColor
+                    );
+                }
             }
         }
-     }
-  }
+    }
 };
 
 let createGhosts = () => {

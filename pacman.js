@@ -14,153 +14,159 @@ class Pacman {
         }, 100);
     }
 
-
-moveProcess() {
-    this.changeDirectionIfPossible();
-    this.moveForwards();
-    if (this.checkCollisions()) {
-        this.moveBackwards();
-        return;
+    moveProcess() {
+        this.changeDirectionIfPossible();
+        this.moveForwards();
+        if (this.checkCollisions()) {
+            this.moveBackwards();
+            return;
+        }
     }
-}
-// ma favorite function lol xD its a nested loop though. Im gonna need to fix this later on. dont like that 0^2 time complexity..
-eat() {
-    for (let i = 0; i < map.length; i++) {
-        for (let j = 0; j < map[0].length; j++) {
-            if (
-                map[i][j] == 2 &&
-                this.getMapX() == j &&
-                this.getMapY() == i
-            ) {
-                map[i][j] = 3;
-                score++;
+
+    eat() {
+        for (let i = 0; i < map.length; i++) {
+            for (let j = 0; j < map[0].length; j++) {
+                if (
+                    map[i][j] == 2 &&
+                    this.getMapX() == j &&
+                    this.getMapY() == i
+                ) {
+                    map[i][j] = 3;
+                    score++;
+                }
             }
         }
     }
-}
-moveBackwards() {
-    switch (this.direction) {
-        case DIRECTION_RIGHT: // Right
-            this.x -= this.speed;
-            break;
-        case DIRECTION_UP: // Up
-            this.y += this.speed;
-            break;
-        case DIRECTION_LEFT: //Left
-            this.x -= this.speed;
-            break;
-        case DIRECTION_BOTTOM: //Bottom
-            this.y += this.speed;
-            break;
 
-    }
-}
-moveForwards() {
-    switch (this.direction) {
-        case DIRECTION_RIGHT: // Right
-            this.x += this.speed;
-            break;
-        case DIRECTION_UP: // Up
-            this.y -= this.speed;
-            break;
-        case DIRECTION_LEFT: // Left
-            this.x -= this.speed;
-            break;
-        case DIRECTION_BOTTOM: // Bottom
-            this.y += this.speed;
-            break;
-    }
-}
-
-checkCollisions() {
-    let isCollided = false;
-    if (
-        map[parseInt(this.y / oneBlockSize)] [
-            parseInt(this.x / oneBlockSize)
-        ] == 1 ||
-        map[parseInt(this.y / oneBlockSize + 0.9999)][
-            parseInt(this.x / oneBlockSize)
-        ] == 1 ||
-        map[parseInt(this.y / oneBlockSize)][
-            parseInt(this.x / oneBlockSize + 0.9999)
-        ] == 1 ||
-        map[parseInt(this.y / oneBlockSize + 0.9999)][
-            parseInt(this.x / oneBlockSize + 0.9999)
-        ] == 1
-    ) {
-        isCollided = true;
-    }
-    return isCollided;
-}
-
-checkGhostCollison(ghosts) {
-    for (let i = 0; i < ghosts.length; i++) {
-        let ghost = ghosts[i];
-        if (
-            ghost.getMapX() == this.getMapX() &&
-            ghost.getMapY() == this.getMapY()
-        ) {
-            return true;
+    moveBackwards() {
+        switch (this.direction) {
+            case DIRECTION_RIGHT: // Right
+                this.x -= this.speed;
+                break;
+            case DIRECTION_UP: // Up
+                this.y += this.speed;
+                break;
+            case DIRECTION_LEFT: // Left
+                this.x += this.speed;
+                break;
+            case DIRECTION_BOTTOM: // Bottom
+                this.y -= this.speed;
+                break;
         }
     }
-    return false;
-}
-changeDirectionIfPossible() {
-    if(this.direction == this.nextDirection) return;
-    let tempDirection = this.direction;
-    this.direction = this.nextDirection;
-    this.moveForwards();
-    if (this.checkCollisions()) {
-        this.moveBackwards();
-        this.direction = tempDirection;
-    } else {
-        this.moveBackwards();
+
+    moveForwards() {
+        switch (this.direction) {
+            case DIRECTION_RIGHT: // Right
+                this.x += this.speed;
+                break;
+            case DIRECTION_UP: // Up
+                this.y -= this.speed;
+                break;
+            case DIRECTION_LEFT: // Left
+                this.x -= this.speed;
+                break;
+            case DIRECTION_BOTTOM: // Bottom
+                this.y += this.speed;
+                break;
+        }
     }
-}
-getMapX() {
-    let mapX = parseInt(this.x / oneBlockSize);
-    return mapX;
-}
-getMapY() {
-    let mapY = parseInt(this.y / oneBlockSize);
-    return mapY;
-}
 
-getMapXRightSide() {
-    let mapX = parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
-    return mapX;
-}
-getMapYRightSide() {
-    let mapY = parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
-    return mapY;
-}
+    checkCollisions() {
+        let isCollided = false;
+        if (
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 1
+        ) {
+            isCollided = true;
+        }
+        return isCollided;
+    }
 
-changeAnimation() {
-    this.currentFrame = 
-        this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
-}
-draw() {
-    canvasContext.save();
-    canvasContext.translate(
-        this.x + oneBlockSize / 2,
-        this.y + oneBlockSize / 2
-    );
-    canvasContext.rotate((this.direction * 90 * MATH.PI) / 180);
-    canvasContext.translate(
-        -this.x - oneBlockSize / 2, 
-        -this.y - oneBlockSize / 2
-    );
-    canvasContext.drawImage(
-        pacmanFrames, 
-        (this.currentFrame - 1) * oneBlockSize,
-        0,
-        oneBlockSize,
-        oneBlockSize,
-        this.x,
-        this.y,
-        this.width,
-        this.height
-    );
-    canvasContext.restore();
-  }
+    checkGhostCollision(ghosts) {
+        for (let i = 0; i < ghosts.length; i++) {
+            let ghost = ghosts[i];
+            if (
+                ghost.getMapX() == this.getMapX() &&
+                ghost.getMapY() == this.getMapY()
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    changeDirectionIfPossible() {
+        if (this.direction == this.nextDirection) return;
+        let tempDirection = this.direction;
+        this.direction = this.nextDirection;
+        this.moveForwards();
+        if (this.checkCollisions()) {
+            this.moveBackwards();
+            this.direction = tempDirection;
+        } else {
+            this.moveBackwards();
+        }
+    }
+
+    getMapX() {
+        let mapX = parseInt(this.x / oneBlockSize);
+        return mapX;
+    }
+
+    getMapY() {
+        let mapY = parseInt(this.y / oneBlockSize);
+
+        return mapY;
+    }
+
+    getMapXRightSide() {
+        let mapX = parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
+        return mapX;
+    }
+
+    getMapYRightSide() {
+        let mapY = parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
+        return mapY;
+    }
+
+    changeAnimation() {
+        this.currentFrame =
+            this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
+    }
+
+    draw() {
+        canvasContext.save();
+        canvasContext.translate(
+            this.x + oneBlockSize / 2,
+            this.y + oneBlockSize / 2
+        );
+        canvasContext.rotate((this.direction * 90 * Math.PI) / 180);
+        canvasContext.translate(
+            -this.x - oneBlockSize / 2,
+            -this.y - oneBlockSize / 2
+        );
+        canvasContext.drawImage(
+            pacmanFrames,
+            (this.currentFrame - 1) * oneBlockSize,
+            0,
+            oneBlockSize,
+            oneBlockSize,
+            this.x,
+            this.y,
+            this.width,
+            this.height
+        );
+        canvasContext.restore();
+    }
 }
